@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GridScript : MonoBehaviour
 {
-    public Transform player;
+
     public LayerMask unWalkableMask;
     public Vector2 gridWoldSize;
     public float nodeRadius;
@@ -49,14 +49,11 @@ public class GridScript : MonoBehaviour
         Gizmos.DrawWireCube(transform.position, new Vector3(gridWoldSize.x, gridWoldSize.y, 1));
         if(grid!=null)
         {
-            Node playerNode = NodeFromWorldPoint(player.position);
+
             foreach (var i in grid)
             {
                 Gizmos.color = i.walkable ? Color.green : Color.red;
-                if(playerNode==i)
-                {
-                    Gizmos.color = Color.cyan;
-                }
+
                 Gizmos.DrawWireCube(i.worldPosition, (nodeDiameter-0.01f)*Vector3.one);
             }
         }
