@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class GridScript : MonoBehaviour
 {
+    public Transform player;
     public LayerMask unWalkableMask;
     public Vector2 gridWoldSize;
     public float nodeRadius;
@@ -14,8 +15,8 @@ public class GridScript : MonoBehaviour
     private void Start()
     {
         nodeDiameter = nodeRadius * 2;
-        gridSizeX =Mathf.RoundToInt( gridWoldSize.x / nodeDiameter);
-        gridSizeY = Mathf.RoundToInt(gridWoldSize.y / nodeDiameter);
+        gridSizeX =Mathf.RoundToInt( gridWoldSize.x / nodeDiameter);//how much cells in grid for x
+        gridSizeY = Mathf.RoundToInt(gridWoldSize.y / nodeDiameter);//how much cells in grid for y
         CreateGrid();
     } 
     void CreateGrid()
@@ -32,15 +33,30 @@ public class GridScript : MonoBehaviour
             }
         }
     }
+    public Node NodeFromWorldPoint(Vector3 worldPosition)
+    {
+
+        float percentX = (-transform.position.x + worldPosition.x / gridWoldSize.x) +0.5f;
+        float percentY = (-transform.position.y + worldPosition.y / gridWoldSize.y) + 0.5f;
+        int x =Mathf.FloorToInt(Mathf.Clamp((gridSizeX)*percentX,0,gridSizeX-1));
+        int y = Mathf.FloorToInt(Mathf.Clamp((gridSizeY) * percentY, 0, gridSizeY - 1));
+        return grid[x, y];
+
+    }
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
         Gizmos.DrawWireCube(transform.position, new Vector3(gridWoldSize.x, gridWoldSize.y, 1));
         if(grid!=null)
         {
-            foreach(var i in grid)
+            Node playerNode = NodeFromWorldPoint(player.position);
+            foreach (var i in grid)
             {
                 Gizmos.color = i.walkable ? Color.green : Color.red;
+                if(playerNode==i)
+                {
+                    Gizmos.color = Color.cyan;
+                }
                 Gizmos.DrawWireCube(i.worldPosition, (nodeDiameter-0.01f)*Vector3.one);
             }
         }
