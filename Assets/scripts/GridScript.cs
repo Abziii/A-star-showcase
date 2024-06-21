@@ -37,8 +37,8 @@ public class GridScript : MonoBehaviour
     public Node NodeFromWorldPoint(Vector3 worldPosition)
     {
 
-        float percentX = (-transform.position.x + worldPosition.x / gridWoldSize.x) +0.5f;
-        float percentY = (-transform.position.y + worldPosition.y / gridWoldSize.y) + 0.5f;
+        float percentX = ( (worldPosition.x-transform.position.x) / gridWoldSize.x) +0.5f;
+        float percentY = (( worldPosition.y - transform.position.y) / gridWoldSize.y) + 0.5f;
         int x =Mathf.FloorToInt(Mathf.Clamp((gridSizeX)*percentX,0,gridSizeX-1));
         int y = Mathf.FloorToInt(Mathf.Clamp((gridSizeY) * percentY, 0, gridSizeY - 1));
         return grid[x, y];
