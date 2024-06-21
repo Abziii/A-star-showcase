@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GridScript : MonoBehaviour
 {
-
+    public bool onlyDisplayPathGizmos;
     public LayerMask unWalkableMask;
     public Vector2 gridWoldSize;
     public float nodeRadius;
@@ -20,6 +20,13 @@ public class GridScript : MonoBehaviour
         gridSizeY = Mathf.RoundToInt(gridWoldSize.y / nodeDiameter);//how much cells in grid for y
         CreateGrid();
     } 
+    public int MaxSize
+    {
+        get
+        {
+            return gridSizeX * gridSizeY;
+        }
+    }
     void CreateGrid()
     {
         grid = new Node[gridSizeX, gridSizeY];
@@ -65,25 +72,39 @@ public class GridScript : MonoBehaviour
     {
         Gizmos.color = Color.green;
         Gizmos.DrawWireCube(transform.position, new Vector3(gridWoldSize.x, gridWoldSize.y, 1));
-
-        if(grid!=null)
+        if(onlyDisplayPathGizmos)
         {
-
-            foreach (var i in grid)
+            if(path!=null)
             {
-                Gizmos.color = i.walkable ? Color.green : Color.red;
-                if(path!=null && path.Contains(i))
+                foreach(Node n in path)
                 {
                     Gizmos.color = Color.cyan;
-                    Gizmos.DrawCube(i.worldPosition, (nodeDiameter - 0.01f) * Vector3.one);
+                    Gizmos.DrawCube(n.worldPosition, (nodeDiameter - 0.01f) * Vector3.one);
                 }
-                else
-                {
-                    Gizmos.DrawWireCube(i.worldPosition, (nodeDiameter - 0.01f) * Vector3.one);
-                }
-
             }
         }
+        else
+        {
+            if (grid != null)
+            {
+
+                foreach (var i in grid)
+                {
+                    Gizmos.color = i.walkable ? Color.green : Color.red;
+                    if (path != null && path.Contains(i))
+                    {
+                        Gizmos.color = Color.cyan;
+                        Gizmos.DrawCube(i.worldPosition, (nodeDiameter - 0.01f) * Vector3.one);
+                    }
+                    else
+                    {
+                        Gizmos.DrawWireCube(i.worldPosition, (nodeDiameter - 0.01f) * Vector3.one);
+                    }
+
+                }
+            }
+        }
+
     }
 
 }
